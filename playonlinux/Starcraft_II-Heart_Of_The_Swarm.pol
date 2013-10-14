@@ -1,0 +1,104 @@
+#!/bin/sh
+
+##############
+# 
+# source: http://goo.gl/rMBX9K
+# thx:    shark711
+#########
+
+[ "$PLAYONLINUX" == "" ] && exit 0
+source "$PLAYONLINUX/lib/sources"
+  
+TITLE="StarCraft II : Heart of the Swarm"
+DEVELOPER="Activision / Blizzard Entertainment"
+PREFIX="StarcraftII"
+WINEVERSION="1.7.4"
+WINEARCH="x86"
+WINEOS="winxp"
+DLURLBASE="http://dist.blizzard.com/downloads/sc2-installers/full/"
+GAME_VMS="2048"
+
+cfg_check
+POL_SetupWindow_Init
+POL_SetupWindow_presentation "$TITLE" "$DEVELOPER" "http://www.starcraft2.com" "Shark 7-11" "$PREFIX"
+  
+POL_Wine_SelectPrefix "$PREFIX"
+POL_Wine_PrefixCreate "$WINEVERSION"
+POL_System_SetArch "$WINEARCH"
+Set_OS "$WINEOS"
+POL_Wine_OverrideDLL "builtin" "dnsapi"
+POL_Wine_OverrideDLL "native,builtin" "mshtml"
+POL_Wine_OverrideDLL "native,builtin""msvcr80"
+# additional
+POL_Wine_OverrideDLL "native,builtin""d3dx11"
+POL_Wine_OverrideDLL "native,builtin""directmusic"
+POL_Wine_OverrideDLL "native,builtin""directplay"
+POL_Wine_OverrideDLL "native,builtin""dotnet40"
+POL_System_TmpCreate "$PREFIX"
+POL_Call POL_Install_vcrun2010
+  
+POL_SetupWindow_menu "Please Select your language/region" "$TITLE" "English (US)~Español (AL)~Português (BR)~English (EU)~English (SG)~Español (EU)~Deutsch~Français~Italiano~Polski~Русский~한국어~繁體中文~简体中文" "~"
+    if [ "$APP_ANSWER" == "English (US)" ]
+      then INSTNAME="StarCraft-II-Setup-enUS.exe"
+    elif [ "$APP_ANSWER" == "Español (AL)" ]
+      then INSTNAME="StarCraft-II-Setup-esMX.exe"
+    elif [ "$APP_ANSWER" == "Português (BR)" ]
+      then INSTNAME="StarCaft-II-Setup-ptBR.exe"
+    elif [ "$APP_ANSWER" == "English (EU)" ]
+      then INSTNAME="StarCraft-II-Setup-enGB.exe"
+    elif [ "$APP_ANSWER" == "English (SG)" ]
+      then INSTNAME="StarCraft-II-Setup-enSG.exe"
+    elif [ "$APP_ANSWER" == "Español (EU)" ]
+      then INSTNAME="StarCraft-II-Setup-esES.exe"
+    elif [ "$APP_ANSWER" == "Deutsch" ]
+      then INSTNAME="StarCraft-II-Setup-deDE.exe"
+    elif [ "$APP_ANSWER" == "Français" ]
+      then INSTNAME="StarCraft-II-Setup-frFR.exe"
+    elif [ "$APP_ANSWER" == "Italiano" ]
+      then INSTNAME="StarCraft-II-Setup-itIT.exe"
+    elif [ "$APP_ANSWER" == "Polski" ]
+      then INSTNAME="StarCraft-II-Setup-plPL.exe"
+    elif [ "$APP_ANSWER" == "Русский" ]
+      then INSTNAME="StarCraft-II-Setup-ruRU.exe"
+    elif [ "$APP_ANSWER" == "한국어" ]
+      then INSTNAME="StarCraft-II-Setup-koKR.exe"
+    elif [ "$APP_ANSWER" == "繁體中文" ]
+      then INSTNAME="StarCraft-II-Setup-zhTW.exe"
+    elif [ "$APP_ANSWER" == "简体中文" ]
+      then INSTNAME="StarCraft-II-Setup-zhCN.exe"
+    fi
+DLURL="$DLURLBASE""$INSTNAME"
+ 
+POL_SetupWindow_InstallMethod "DVD,LOCAL,DOWNLOAD"
+if [ "$INSTALL_METHOD" == "LOCAL" ]
+then
+    cd "$HOME"
+    POL_SetupWindow_browse "Please select the installation file to run." "$INSTNAME"
+    POL_SetupWindow_wait "Installing $TITLE." "$TITLE"
+    POL_Wine start /unix "$APP_ANSWER"
+elif [ "$INSTALL_METHOD" == "DOWNLOAD" ]
+then
+    cd "$POL_System_TmpDir"
+    POL_Download "$DLURL"
+    POL_SetupWindow_wait "Installing $TITLE." "$TITLE"
+    POL_Wine start /unix "$POL_System_TmpDir/$INSTNAME"
+elif [ "$INSTALL_METHOD" == "DVD" ]
+then
+    INSTNAME="StarCraft II Setup.exe"
+    POL_SetupWindow_message "$(eval_gettext 'Please insert game media into your disk drive\nif not already done.')" "$TITLE"
+    POL_SetupWindow_cdrom
+    POL_SetupWindow_check_cdrom "$INSTNAME"
+    POL_Wine start /unix "$CDROM/$INSTNAME"
+fi
+  
+POL_Wine_WaitExit "$TITLE"
+  
+POL_System_TmpDelete
+POL_SetupWindow_VMS $GAME_VMS
+POL_Wine_SetVideoDriver
+  
+POL_Shortcut "StarCraft II.exe" "$TITLE"
+POL_Shortcut "StarCraft II Editor.exe" "$TITLE Editor"
+ 
+POL_SetupWindow_Close
+exit
