@@ -1,0 +1,24 @@
+<user nick="USERNAME" password="PASSWORD" version="1">
+	<setting name="last_version">197120</setting>
+	<account protocol="jabber" handle="a@b.c" password="X" autoconnect="1" tag="xmpp" server="xmpp.address.de">
+	</account>
+	<account protocol="jabber" handle="a@b.c" password="Y" autoconnect="1" tag="facebook">
+		<setting name="nick_format">%full_name</setting>
+	</account>
+	<account protocol="jabber" handle="a@b.c" password="Z" autoconnect="1" tag="gtalk">
+		<setting name="nick_format">%full_name</setting>
+	</account>
+	<channel name="&amp;bitlbee" type="control">
+		<setting name="auto_join">true</setting>
+	</channel>
+	<channel name="&amp;facebook" type="control">
+		<setting name="account">facebook</setting>
+		<setting name="fill_by">account</setting>
+	</channel>
+	<channel name="&amp;gtalk" type="control">
+		<setting name="account">gtalk</setting>
+	</channel>
+	<channel name="&amp;xmpp" type="control">
+		<setting name="account">xmpp</setting>
+	</channel>
+</user>

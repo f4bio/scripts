@@ -1,2 +1,2 @@
-intellij-gitutils
+random scripts
 =================
