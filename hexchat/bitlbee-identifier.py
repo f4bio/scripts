@@ -56,7 +56,6 @@ HELP =	[
 
 trigger = "bbi"
 
-
 ### basic getter / setter
 def showHelp():
 	for line in HELP:
@@ -66,10 +65,12 @@ def clearVals():
 	for k in PREFS.keys():
 		hexchat.set_pluginpref(PREFS[k], "")
 
-def saveVals(vals):
-	for i,k in enumerate(PREFS.keys()):
-		hexchat.prnt("{} {}".format(str(i), str(k)))
-		hexchat.set_pluginpref(str(PREFS[k]), vals[i])
+def saveVals(par):
+	hexchat.set_pluginpref("server", par[0])
+	hexchat.set_pluginpref("chan", par[1])
+	hexchat.set_pluginpref("pass", par[2])
+	hexchat.set_pluginpref("debug", par[3])
+	hexchat.set_pluginpref("nick", par[4])
 
 def showVals():
 	for k in PREFS.keys():
@@ -85,19 +86,19 @@ def onJoin_cb(word, word_eol, userdata):
 	nick = hexchat.get_info("nick")
 
 	if re.match(gV("nick"), str(nick)) == None:
-		if gV("debug"):
+		if gV("debug") == "True":
 			msg = "nick: '{}' doesn't match '{}'"
 			hexchat.prnt(msg.format(nick, gV("nick")))
 		return hexchat.EAT_NONE
 
-	if re.match(prefs["server"], str(server)) == None:
-		if gV("debug"):
+	if re.match(gV("server"), str(server)) == None:
+		if gV("debug") == "True":
 			msg = "server: '{}' doesn't match '{}'"
 			hexchat.prnt(msg.format(server, gV("server")))
 		return hexchat.EAT_NONE
 
-	if re.match(prefs["chan"], str(chan)) == None:
-		if gV("debug"):
+	if re.match(gV("chan"), str(chan)) == None:
+		if gV("debug") == "True":
 			msg = "channel: '{}' doesn't match '{}'"
 			hexchat.prnt(msg.format(chan, gV("chan")))
 		return hexchat.EAT_NONE
@@ -113,9 +114,13 @@ def onCommand_cb(word, word_eol, userdata):
 		return hexchat.EAT_ALL
 	
 	elif word[1] == CMDS[trigger][1]: # save values
-		tmp = word[2:]
-		tmp.append("False")
-		saveVals(tmp)
+		se = str(word[2])
+		ch = str(word[3])
+		pa = str(word[4])
+		de = str("False")
+		ni = str(hexchat.get_info("nick"))
+
+		saveVals([se, ch, pa, de, ni])
 		return hexchat.EAT_ALL
 
 	elif word[1] == CMDS[trigger][2]:  # show values
