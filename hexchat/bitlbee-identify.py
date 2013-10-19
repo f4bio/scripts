@@ -1,8 +1,7 @@
 #!/usr/bin/env python
 #### ###################
 ##
-##	F T
-##	ft2011@gmail.com
+##	F T (ft2011)
 ##	plugin to autoidentify on bitlbee
 ##	v0.1 - 2013-10-19
 ##	----------------
@@ -15,6 +14,7 @@ import re
 __module_name__ = "bitlbee-identify"
 __module_version__ = "0.1"
 __module_description__ = "Send identify command to BitlBee channel"
+__author__ = "F T (ft2011)"
 
 DEBUG = False
 

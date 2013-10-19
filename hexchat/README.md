@@ -1,0 +1,3 @@
+hexchat scripts
+===============
+* bitlbee identify
