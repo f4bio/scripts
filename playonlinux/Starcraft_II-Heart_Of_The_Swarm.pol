@@ -14,7 +14,7 @@ DEVELOPER="Activision / Blizzard Entertainment"
 PREFIX="StarcraftII"
 WINEVERSION="1.7.4"
 WINEARCH="x86"
-WINEOS="winxp"
+WINEOS="win7"
 DLURLBASE="http://dist.blizzard.com/downloads/sc2-installers/full/"
 GAME_VMS="2048"
 
@@ -35,7 +35,7 @@ POL_Wine_OverrideDLL "native,builtin""directmusic"
 POL_Wine_OverrideDLL "native,builtin""directplay"
 POL_Wine_OverrideDLL "native,builtin""dotnet40"
 POL_System_TmpCreate "$PREFIX"
-POL_Call POL_Install_vcrun2010
+#POL_Call POL_Install_vcrun2010
   
 POL_SetupWindow_menu "Please Select your language/region" "$TITLE" "English (US)~Español (AL)~Português (BR)~English (EU)~English (SG)~Español (EU)~Deutsch~Français~Italiano~Polski~Русский~한국어~繁體中文~简体中文" "~"
     if [ "$APP_ANSWER" == "English (US)" ]
