@@ -1,3 +1,4 @@
 android scripts
 ==============
-* drawable multi res
+* multi res drawables
+* playstore on avd
