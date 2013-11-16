@@ -1,0 +1,2 @@
+[[ -f ~/.sh.d/alias ]] && . ~/.sh.d/alias
+[[ -f ~/.sh.d/export ]] && . ~/.sh.d/export

@@ -1,0 +1,2 @@
+alias psa="ps aux | grep"
+alias git-save="git add -A && git commit --message \"default autosave\" && git push"
