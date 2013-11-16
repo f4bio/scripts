@@ -70,3 +70,16 @@ target/
 ##
 ### ##########
 proguard_logs/
+
+###### ################
+##
+##	python
+##	thx: http://goo.gl/WR3a3F
+##
+### ##########
+__pycache__/
+*.py[cod]
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+.cache

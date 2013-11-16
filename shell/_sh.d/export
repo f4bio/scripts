@@ -1,2 +1,14 @@
-export PATH=$PATH:/opt/android-sdk/platform-tools
+#### variables
+export ANDROID=/opt/android-sdk
+export JAVA_HOME=/opt/java
+export PKG_CONFIG_PATH=/usr/lib/pkgconfig
+export GDK_BACKEND=wayland # application-name
+export GIT_IGNORE_FILE=/home/ft/workspace/scripts/git/_gitignore
 export EDITOR=$(which nano)
+export BROWSER=$(which chromium)
+
+####  path updates
+export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/core_perl
+export PATH=$PATH:$ANDROID/platform-tools
+export PATH=$PATH:$JAVA_HOME/bin
+export PATH=$PATH:$PKG_CONFIG_PATH
