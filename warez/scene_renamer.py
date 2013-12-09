@@ -50,12 +50,7 @@ def usage():
 ##### #####################
 def ren(inDir, verbose, recursive):	
 
-	if len(badChars) != len(goodChars):
-		print(str("kernel panic! exiting!"))
-		sys.exit(-1)
-
 	for f in os.listdir(inDir):
-
 		if verbose:
 			print("considering for rename: {}".format(f))
 
@@ -199,6 +194,8 @@ def main(argv=None):
 			outFile = "{}.sfv".format(os.path.basename(os.path.abspath(userIn)))
 		else:
 			outFile = str(userOut)
+
+		outFile = outFile.lower()
 		if verbose:
 			print("generating checksums in sfv-file: '{}'".format(outFile))
 
