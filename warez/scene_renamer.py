@@ -34,13 +34,16 @@ def usage():
 ##	rename
 ##	
 ##### #####################
-def ren(inDir, inFiles, verbose):	
+def ren(inDir, inFiles, verbose, recursive):	
 
 	if len(badChars) != len(goodChars):
 		print(str("kernel panic! exiting!"))
 		sys.exit(-1)
 
 	for f in inFiles:
+
+		if os.path.isdir(f):
+			checksum(f, os.listdir(f), verbose, recursive)
 
 		if str(f) in badFiles:
 			continue
@@ -69,12 +72,17 @@ def ren(inDir, inFiles, verbose):
 ##	checksum
 ##	
 ##### #####################
-def checksum(inDir, inFiles, outFile, verbose):
+def checksum(inDir, inFiles, outFile, verbose, recursive):
 
 	if os.path.isfile(os.path.join(inDir, outFile)):
 		os.remove(os.path.join(inDir, outFile))
 
 	for f in inFiles:
+
+		if os.path.isdir(f):
+			checksum(f, os.listdir(f), 
+				"{}.sfv".format(os.path.basename(
+					os.path.abspath(f))), verbose, recursive)
 
 		if str(f) in badFiles:
 			continue
@@ -101,7 +109,7 @@ def checksum(inDir, inFiles, outFile, verbose):
 ##### #####################
 def main(argv=None):
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hi:vo:", ["help", "input", "sfv-output-file", "no-sfv", "no-rename"])
+		opts, args = getopt.getopt(sys.argv[1:], "hrv:oi", ["help", "input", "sfv-output-file", "no-sfv", "no-rename", "recursive"])
 	except getopt.GetoptError as err:
 		# print help information and exit:
 		print(str(err)) # will print something like "option -a not recognized"
@@ -113,6 +121,7 @@ def main(argv=None):
 	verbose = False
 	doSfv = True
 	doRename = True
+	recursive = False
 
 	for o, a in opts:
 		if o == "-v":
@@ -134,6 +143,8 @@ def main(argv=None):
 		elif o == "--no-rename":
 			doRename = False
 
+		elif o == "--recursive":
+			recursive = True
 		else:
 			assert False, "unhandled option"
 
