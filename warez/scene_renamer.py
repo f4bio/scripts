@@ -25,9 +25,10 @@ replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue',
 				ord('À'): 'A',  ord('É'): 'O',  ord('Ú'): 'U',
 				ord('À'): 'A',  ord('È'): 'O',  ord('Ù'): 'U',
 
-				ord('['): '(',  ord(']'): ')',
-				ord('ß'): 'ss', ord(' '): "_" }
-removeChar = "\'#*"
+				ord('['): "(",  ord(']'): ")",
+				ord('ß'): "ss", ord(' '): "_",
+
+				ord('#'): "",  ord('*'): "", ord('\''): "", ord('\"'): ""}
 
 includedFiles = ".*"
 includedDirs = ".*"
@@ -70,7 +71,7 @@ def ren(inDir, verbose, recursive):
 		# do renaming
 		result = re.sub(r"\s+", "_", f)
 		result = re.sub(r"_+", "_", result)
-		result.translate(replaceChar, removeChar)
+		result.translate(replaceChar)
 
 		if str(f) == str(result):
 			if verbose:
