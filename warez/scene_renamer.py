@@ -143,7 +143,7 @@ def main(argv=None):
 		elif o in ("-n", "--no-rename"):
 			doRename = False
 
-		elif o == in ("-r", "--recursive"):
+		elif o in ("-r", "--recursive"):
 			recursive = True
 		else:
 			assert False, "unhandled option"
