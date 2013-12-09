@@ -109,7 +109,7 @@ def checksum(inDir, inFiles, outFile, verbose, recursive):
 ##### #####################
 def main(argv=None):
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hrv:oi", ["help", "input", "sfv-output-file", "no-sfv", "no-rename", "recursive"])
+		opts, args = getopt.getopt(sys.argv[1:], "hrvo:i:sn", ["help", "recursive", "verbose", "output", "input", "no-sfv", "no-rename"])
 	except getopt.GetoptError as err:
 		# print help information and exit:
 		print(str(err)) # will print something like "option -a not recognized"
@@ -124,7 +124,7 @@ def main(argv=None):
 	recursive = False
 
 	for o, a in opts:
-		if o == "-v":
+		if o in ("-v", "--verbose"):
 			verbose = True
 
 		elif o in ("-h", "--help"):
@@ -134,16 +134,16 @@ def main(argv=None):
 		elif o in ("-i", "--input"):
 			userIn = a
 
-		elif o in ("-o", "--sfv-output-file"):
+		elif o in ("-o", "--output"):
 			userOut = a
 
-		elif o == "--no-sfv":
+		elif o in ("-s", "--no-sfv"):
 			doSfv = False
 
-		elif o == "--no-rename":
+		elif o in ("-n", "--no-rename"):
 			doRename = False
 
-		elif o == "--recursive":
+		elif o == in ("-r", "--recursive"):
 			recursive = True
 		else:
 			assert False, "unhandled option"
