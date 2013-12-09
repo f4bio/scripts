@@ -42,7 +42,7 @@ def ren(inDir, inFiles, verbose, recursive):
 
 	for f in inFiles:
 
-		if os.path.isdir(f):
+		if os.path.isdir(f) and recursive:
 			checksum(f, os.listdir(f), verbose, recursive)
 
 		if str(f) in badFiles:
@@ -79,7 +79,7 @@ def checksum(inDir, inFiles, outFile, verbose, recursive):
 
 	for f in inFiles:
 
-		if os.path.isdir(f):
+		if os.path.isdir(f) and recursive:
 			checksum(f, os.listdir(f), 
 				"{}.sfv".format(os.path.basename(
 					os.path.abspath(f))), verbose, recursive)
@@ -164,7 +164,7 @@ def main(argv=None):
 	## rename
 	####
 	if doRename:
-		ren(inDir, inFiles, verbose)
+		ren(inDir, inFiles, verbose, recursive)
 
 	######
 	## sfv
@@ -180,7 +180,7 @@ def main(argv=None):
 			print("generating checksums in sfv-file: '{}'".format(outFile))
 			pass
 
-		checksum(inDir, inFiles, outFile, verbose)
+		checksum(inDir, inFiles, outFile, verbose, recursive)
 
 ######## ########################
 ##
