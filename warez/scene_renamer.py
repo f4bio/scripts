@@ -15,11 +15,25 @@ import os
 import getopt
 import re
 import zlib
+import re
 
-badChars = ["'", "ß", "ä", "ö", "ü", "Ä", "Ö", "Ü", "á", "à", "ú", "ù", "é", "è", "À", "Á", "É", "È", "Ú", "Ù", ",", "[", "]"]
-goodChars = ["_", "ss", "ae", "oe", "ue", "Ae", "Oe", "Ue", "a", "a", "u", "u", "e", "e", "A", "A", "E", "E", "U", "U", "_", "_", "_"]
+replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue', 
+				ord('á'): 'a',  ord('é'): 'e',  ord('ú'): 'u',
+				ord('à'): 'a',  ord('è'): 'e',  ord('ù'): 'u',
 
-badFiles = ["Thumbs.db"]
+				ord('Ä'): 'Ae', ord('Ö'): 'Oe', ord('Ü'): 'Ue',
+				ord('À'): 'A',  ord('É'): 'O',  ord('Ú'): 'U',
+				ord('À'): 'A',  ord('È'): 'O',  ord('Ù'): 'U',
+
+				ord('['): '(',  ord(']'): ')',
+				ord('ß'): 'ss', ord(' '): "_" }
+removeChar = "\'#*"
+
+includedFiles = ".*"
+includedDirs = ".*"
+
+excludedFiles = ".*nfo|.*jpg|.*txt"
+excludedDirs = "[C|c]overs?|[P|p]roof|Sample|^\.."
 
 ######## ########################
 ##
@@ -27,68 +41,79 @@ badFiles = ["Thumbs.db"]
 ##	
 ##### #####################
 def usage():
-	print("scene_renamer.py [-v] [--recursive] [--no-sfv] [--no-rename] [-o output.sfv] -i /input/directory/")
+	print("scene_renamer.py [-v] [-r] [--no-sfv] [--no-rename] [-o output] -i /input/directory/")
 
 ######## ########################
 ##
 ##	rename
 ##	
 ##### #####################
-def ren(inDir, inFiles, verbose, recursive):	
+def ren(inDir, verbose, recursive):	
 
 	if len(badChars) != len(goodChars):
 		print(str("kernel panic! exiting!"))
 		sys.exit(-1)
 
-	for f in inFiles:
+	for f in os.listdir(inDir):
 
-		if os.path.isdir(f) and recursive:
-			checksum(f, os.listdir(f), verbose, recursive)
+		if verbose:
+			print("considering for rename: {}".format(f))
 
-		if str(f) in badFiles:
+		# excluded?
+		if re.match(excludedFiles, str(f)) or re.match(excludedDirs, str(f)):
 			continue
 
+		# included?
+		if not re.match(includedFiles, str(f)) and not re.match(includedDirs, str(f)):
+			continue
+
+		# recursive?
+		if os.path.isdir(os.path.join(inDir, f)) and recursive:
+			ren(os.path.join(inDir, f), verbose, recursive)
+			continue
+
+		# do renaming
 		result = re.sub(r"\s+", "_", f)
-
-		for b,g in zip(badChars, goodChars):
-			result = result.replace(b, g)
-
 		result = re.sub(r"_+", "_", result)
-
-		src = os.path.join(inDir, f)
-		dest = os.path.join(inDir, result)
+		result.translate(replaceChar, removeChar)
 
 		if str(f) == str(result):
-			print("nothing to do, skipping...")
+			if verbose:
+				print("nothing to rename...")
 			continue
 
 		if verbose:
-			print("renaming: '{}' to '{}'...".format(f, result))
+			print("renaming in {}: '{}' to '{}'...".format(inDir, f, result))
 
-		os.rename(src, dest)
+		os.rename(os.path.join(inDir, f), os.path.join(inDir, result))
 
 ######## ########################
 ##
 ##	checksum
 ##	
 ##### #####################
-def checksum(inDir, inFiles, outFile, verbose, recursive):
+def checksum(inDir, outFile, verbose, recursive):
 
 	if os.path.isfile(os.path.join(inDir, outFile)):
 		os.remove(os.path.join(inDir, outFile))
 
-	for f in inFiles:
-
-		if os.path.isdir(f) and recursive:
-			checksum(f, os.listdir(f), 
-				"{}.sfv".format(os.path.basename(
-					os.path.abspath(f))), verbose, recursive)
-
-		if str(f) in badFiles:
-			continue
+	for f in os.listdir(inDir):
 
 		if verbose:
-			print("calucating sum crc32 of {}...".format(f))
+			print("considering for checksum: {}".format(f))
+
+		# excluded?
+		if re.match(excludedFiles, str(f)) or re.match(excludedDirs, str(f)):
+			continue
+
+		# included?
+		if not re.match(includedFiles, str(f)) and not re.match(includedDirs, str(f)):
+			continue
+
+		# recursive?
+		if os.path.isdir(os.path.join(inDir, f)) and recursive:
+			checksum(os.path.join(inDir, f), "{}.sfv".format(os.path.join(inDir, f)), verbose, recursive)
+			continue
 
 		prev = 0
 		for line in open(os.path.join(inDir, f), "rb"):
@@ -109,7 +134,9 @@ def checksum(inDir, inFiles, outFile, verbose, recursive):
 ##### #####################
 def main(argv=None):
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hrvo:i:sn", ["help", "recursive", "verbose", "output", "input", "no-sfv", "no-rename"])
+		opts, args = getopt.getopt(sys.argv[1:], "hrvo:i:sn", 
+			["help", "recursive", "verbose", "output", "input", "no-sfv", "no-rename"])
+
 	except getopt.GetoptError as err:
 		# print help information and exit:
 		print(str(err)) # will print something like "option -a not recognized"
@@ -148,39 +175,34 @@ def main(argv=None):
 		else:
 			assert False, "unhandled option"
 
-	## input is always needed
-	if not userIn:
-		print("no input-dir specified, check --help")
-		sys.exit()
+	if verbose:
+		print("input: {} output: {} verbose: {} sfv: {} rename: {} recursive: {}"
+			.format(userIn, userOut, verbose, doSfv, doRename, recursive))
 
-	if os.path.isdir(userIn):
-		inFiles = os.listdir(userIn)
-		inDir = os.path.abspath(userIn)
-	else:
-		inFiles = [os.path.basename(userIn)]
-		inDir = os.path.dirname(userIn)
+	## input is always needed
+	if not userIn or not os.path.isdir(userIn):
+		if verbose:
+			print("no input-dir specified, check --help")
+		sys.exit()
 
 	######
 	## rename
 	####
 	if doRename:
-		ren(inDir, inFiles, verbose, recursive)
+		ren(userIn, verbose, recursive)
 
 	######
 	## sfv
 	####
 	if doSfv:
-		inFiles = os.listdir(userIn)
 		if not userOut or os.path.isdir(userOut):
 			outFile = "{}.sfv".format(os.path.basename(os.path.abspath(userIn)))
 		else:
 			outFile = str(userOut)
-
 		if verbose:
 			print("generating checksums in sfv-file: '{}'".format(outFile))
-			pass
 
-		checksum(inDir, inFiles, outFile, verbose, recursive)
+		checksum(userIn, outFile, verbose, recursive)
 
 ######## ########################
 ##
@@ -188,5 +210,5 @@ def main(argv=None):
 ##	
 ##### #####################
 if __name__ == "__main__":
-    # ./scene_renamer.py /media/MyBook/data/TV-XViD/00_P2P/Stargate.Atlantis/S01
+    # ./scene_renamer.py /var/downloads/site/GAMES-PC/The.Sims.3.Seasons-RELOADED/
     sys.exit(main())
