@@ -27,7 +27,7 @@ badFiles = ["Thumbs.db"]
 ##	
 ##### #####################
 def usage():
-	print("scene_renamer.py [-v] [--no-sfv] [--no-rename] [-o output.sfv] -i /input/directory/")
+	print("scene_renamer.py [-v] [--recursive] [--no-sfv] [--no-rename] [-o output.sfv] -i /input/directory/")
 
 ######## ########################
 ##
