@@ -30,11 +30,11 @@ replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue',
 
 				ord('#'): "",  ord('*'): "", ord('\''): "", ord('\"'): ""}
 
-includedFiles = ".*"
-includedDirs = ".*"
+includedFiles = "."
+includedDirs = "."
 
-excludedFiles = ".*nfo|.*jpg|.*txt"
-excludedDirs = "[C|c]overs?|[P|p]roof|Sample|^\.."
+excludedFiles = ".*\.nfo$|.*\.jpg$|.*\.txt$|.*\.sfv$"
+excludedDirs = "[C|c]overs?|[P|p]roof|Sample|^\."
 
 ######## ########################
 ##
@@ -57,21 +57,26 @@ def ren(inDir, verbose, recursive):
 
 		# excluded?
 		if re.match(excludedFiles, str(f)) or re.match(excludedDirs, str(f)):
+			if verbose:
+				print("excluded!")
 			continue
 
 		# included?
 		if not re.match(includedFiles, str(f)) and not re.match(includedDirs, str(f)):
+			if verbose:
+				print("not included!")
 			continue
 
 		# recursive?
 		if os.path.isdir(os.path.join(inDir, f)) and recursive:
 			ren(os.path.join(inDir, f), verbose, recursive)
-			continue
 
 		# do renaming
-		result = re.sub(r"\s+", "_", f)
+		result = str(f)
+		result = result.translate(replaceChar)
+		result = re.sub(r"\s+", "_", result)
 		result = re.sub(r"_+", "_", result)
-		result.translate(replaceChar)
+		result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "", result)
 
 		if str(f) == str(result):
 			if verbose:
@@ -93,22 +98,32 @@ def checksum(inDir, outFile, verbose, recursive):
 	if os.path.isfile(os.path.join(inDir, outFile)):
 		os.remove(os.path.join(inDir, outFile))
 
+	if verbose:
+		print("generating checksums in sfv-file: '{}'".format(outFile))
+
 	for f in os.listdir(inDir):
 
 		if verbose:
-			print("considering for checksum: {}".format(f))
+			print("considering for checksum: '{}'".format(f))
 
 		# excluded?
 		if re.match(excludedFiles, str(f)) or re.match(excludedDirs, str(f)):
+			if verbose:
+				print("excluded!")
 			continue
 
 		# included?
 		if not re.match(includedFiles, str(f)) and not re.match(includedDirs, str(f)):
+			if verbose:
+				print("not included!")
 			continue
 
 		# recursive?
 		if os.path.isdir(os.path.join(inDir, f)) and recursive:
-			checksum(os.path.join(inDir, f), "{}.sfv".format(os.path.join(inDir, f)), verbose, recursive)
+			if verbose:
+				print("is folder!")
+			sfvFile = os.path.join(inDir, f, "{}.sfv".format(f))
+			checksum(os.path.join(inDir, f), sfvFile, verbose, recursive)
 			continue
 
 		prev = 0
@@ -196,10 +211,7 @@ def main(argv=None):
 		else:
 			outFile = str(userOut)
 
-		outFile = outFile.lower()
-		if verbose:
-			print("generating checksums in sfv-file: '{}'".format(outFile))
-
+		outFile = outFile.lower()2
 		checksum(userIn, outFile, verbose, recursive)
 
 ######## ########################
