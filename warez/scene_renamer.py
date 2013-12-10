@@ -78,7 +78,7 @@ def ren(inDir, verbose, recursive):
 		result = result.translate(replaceChar)
 		result = re.sub(r"\s+", "_", result)
 		result = re.sub(r"_+", "_", result)
-		result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9]+$", "", result)
+		result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9\)]+$", "", result)
 
 		if str(f) == str(result):
 			if verbose:
