@@ -22,19 +22,19 @@ replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue',
 				ord('à'): 'a',  ord('è'): 'e',  ord('ù'): 'u',
 
 				ord('Ä'): 'Ae', ord('Ö'): 'Oe', ord('Ü'): 'Ue',
-				ord('À'): 'A',  ord('É'): 'O',  ord('Ú'): 'U',
-				ord('À'): 'A',  ord('È'): 'O',  ord('Ù'): 'U',
+				ord('À'): 'A',  ord('É'): 'E',  ord('Ú'): 'U',
+				ord('À'): 'A',  ord('È'): 'E',  ord('Ù'): 'U',
 
 				ord('['): "(",  ord(']'): ")",
 				ord('ß'): "ss", ord(' '): "_",
-
+				ord('&'): "and", ord('!'): "",
 				ord('#'): "",  ord('*'): "", ord('\''): "", ord('\"'): ""}
 
-includedFiles = "."
-includedDirs = "."
+includedRename = "."
+includedChecksum = "."
 
-excludedFiles = ".*\.nfo$|.*\.jpg$|.*\.txt$|.*\.sfv$"
-excludedDirs = "[C|c]overs?|[P|p]roof|Sample|^\."
+excludedRename = "^\."
+excludedChecksum = "[C|c]overs?|[P|p]roof|Sample|^\.|.*\.nfo$|.*\.jpg$|.*\.txt$|.*\.sfv$"
 
 ######## ########################
 ##
@@ -47,6 +47,8 @@ def usage():
 ######## ########################
 ##
 ##	rename
+##
+##	TODO: rename "inDir" itelf 
 ##	
 ##### #####################
 def ren(inDir, verbose, recursive):	
@@ -56,13 +58,13 @@ def ren(inDir, verbose, recursive):
 			print("considering for rename: {}".format(f))
 
 		# excluded?
-		if re.match(excludedFiles, str(f)) or re.match(excludedDirs, str(f)):
+		if re.match(excludedRename, str(f)):
 			if verbose:
 				print("excluded!")
 			continue
 
 		# included?
-		if not re.match(includedFiles, str(f)) and not re.match(includedDirs, str(f)):
+		if not re.match(includedRename, str(f)):
 			if verbose:
 				print("not included!")
 			continue
@@ -107,13 +109,13 @@ def checksum(inDir, outFile, verbose, recursive):
 			print("considering for checksum: '{}'".format(f))
 
 		# excluded?
-		if re.match(excludedFiles, str(f)) or re.match(excludedDirs, str(f)):
+		if re.match(excludedChecksum, str(f)):
 			if verbose:
 				print("excluded!")
 			continue
 
 		# included?
-		if not re.match(includedFiles, str(f)) and not re.match(includedDirs, str(f)):
+		if not re.match(includedChecksum, str(f)):
 			if verbose:
 				print("not included!")
 			continue
@@ -211,7 +213,7 @@ def main(argv=None):
 		else:
 			outFile = str(userOut)
 
-		outFile = outFile.lower()2
+		outFile = outFile.lower()
 		checksum(userIn, outFile, verbose, recursive)
 
 ######## ########################
@@ -220,5 +222,5 @@ def main(argv=None):
 ##	
 ##### #####################
 if __name__ == "__main__":
-    # ./scene_renamer.py /var/downloads/site/GAMES-PC/The.Sims.3.Seasons-RELOADED/
+    # ./scene_renamer.py -r -v -i /var/downloads/site/GAMES-PC/The.Sims.3.Seasons-RELOADED/
     sys.exit(main())
