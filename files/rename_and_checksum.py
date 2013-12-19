@@ -37,6 +37,12 @@ includedChecksum = "."
 excludedRename = "^\.|^\[.*\]$|^\(.*\)$"
 excludedChecksum = "[C|c]overs?|[P|p]roof|Sample|^\.|.*\.nfo$|.*\.jpg$|.*\.txt$|.*\.sfv$"
 
+renameFail = [] 
+renameSuccess = [] # good idea? Oo
+
+checksumFail = []
+checksumSuccess = [] # good idea? Oo
+
 ######## ########################
 ##
 ##	util
@@ -145,11 +151,13 @@ def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 				print("renaming in {}: '{}' to '{}'...".format(inDir, str(f), result))
 
 			os.rename(os.path.join(inDir, f), os.path.join(inDir, result))
+			renameSuccess.append(result)
 
 		except UnicodeEncodeError as uee:
 			# just in case...
-			print("encode error, skipping. ({})".format(uee))
-			raise		
+			print("(renaming) encode error, skipping. ({})".format(uee))
+			renameFail.append("{} - {}".format(os.path.join(inDir, f), uee))
+			raise
 
 ######## ########################
 ##
@@ -158,47 +166,55 @@ def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 ##### #####################
 def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 
+	
 	if os.path.isfile(os.path.join(inDir, outFile)) and overwrite:
 		os.remove(os.path.join(inDir, outFile))
 
 	if verbose:
-		print("generating checksums in sfv-file: \'{}\'".format(outFile))
+		print("generating checksums in sfv-file: '{}'".format(outFile))
 
 	for f in os.listdir(inDir):
-		fN = os.path.basename(f)
-
-		if verbose:
-			print("considering checksum for: \'{}\'".format(f))
-
-		# excluded?
-		if re.match(excludedChecksum, f):
-			if verbose:
-				print("excluded!")
-			continue
-
-		# included?
-		if not re.match(includedChecksum, f):
-			if verbose:
-				print("not included!")
-			continue
-			
-		# recursive?
-		if os.path.isdir(os.path.join(inDir, fN)) and recursive:
-			if verbose:
-				print("is folder!")
-			sfvFile = os.path.join(inDir, fN, "{}.sfv".format(fN.lower()))
-			checksum(os.path.join(inDir, fN), sfvFile, verbose, recursive, overwrite, poolSema)
-			continue
-	
 		try:
-			poolSema.acquire()
-			CheckFile(os.path.join(inDir, fN), outFile, poolSema, verbose).start()
-			pass
-		except Exception as e:
+			fN = os.path.basename(f)
+
+			if verbose:
+				print("considering checksum for: '{}'".format(f))
+
+			# excluded?
+			if re.match(excludedChecksum, f):
+				if verbose:
+					print("excluded!")
+				continue
+
+			# included?
+			if not re.match(includedChecksum, f):
+				if verbose:
+					print("not included!")
+				continue
+				
+			# recursive?
+			if os.path.isdir(os.path.join(inDir, fN)) and recursive:
+				if verbose:
+					print("is folder!")
+				sfvFile = os.path.join(inDir, fN, "{}.sfv".format(fN.lower()))
+				checksum(os.path.join(inDir, fN), sfvFile, verbose, recursive, overwrite, poolSema)
+				continue
+
+			try:
+				poolSema.acquire()
+				CheckFile(os.path.join(inDir, fN), outFile, poolSema, verbose).start()
+				checksumSuccess.append(fN)
+				pass
+			except Exception as e:
+				raise
+				usage()
+				sys.exit(2)
+
+		except UnicodeEncodeError as uee:
+			# just in case...
+			print("(checksum) encode error, skipping. ({})".format(uee))
+			checksumFail.append("{} - {}".format(os.path.join(inDir, f), uee))
 			raise
-			usage()
-			sys.exit(2)
-		
 
 ######## ########################
 ##
@@ -208,7 +224,8 @@ def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 def main(argv=None):
 	try:
 		opts, args = getopt.getopt(sys.argv[1:], "hrvo:i:swnlut:", 
-			["help", "recursive", "verbose", "output", "input", "no-sfv", "no-overwrite", "no-rename", "to-lowercase", "to-uppercase", "thread-count"])
+			["help", "recursive", "verbose", "output", "input", "no-sfv", 
+			"no-overwrite", "no-rename", "to-lowercase", "to-uppercase", "thread-count"])
 
 	except getopt.GetoptError as err:
 		# print help information and exit:
@@ -293,6 +310,23 @@ def main(argv=None):
 		outFile = outFile.lower()
 		poolSema = threading.BoundedSemaphore(value=threadCount)
 		checksum(userIn, outFile, verbose, recursive, doOverwrite, poolSema)
+
+	if verbose:
+		print("")
+		print("ALL DONE!")
+		print("")
+		print("\t\terrors:")
+		print("\t\trename: {}".format(len(renameFail)))
+		print("\t\tchecksum: {}".format(len(checksumFail)))
+		print("")
+		print("\t\tsuccess")
+		print("\t\trename: {}".format(len(renameSuccess)))
+		print("\t\tchecksum: {}".format(len(checksumSuccess)))
+		print("")
+		print("\t\tcareful:")
+		print("\t\t\t1) files are counted per process (renamed and checksummed = 2 files)")
+		print("\t\t\t2) already good names are left out")
+		pass
 
 ######## ########################
 ##
