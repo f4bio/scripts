@@ -164,11 +164,11 @@ def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 ##### #####################
 def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 
-	if os.path.isfile(os.path.join(inDir, outFile.decode("utf-8"))) and overwrite:
-		os.remove(os.path.join(inDir, outFile.decode("utf-8")))
+	if os.path.isfile(os.path.join(inDir, outFile)) and overwrite:
+		os.remove(os.path.join(inDir, outFile))
 
 	if verbose:
-		print("generating checksums in sfv-file: '{}'".format(outFile.decode("utf-8")))
+		print("generating checksums in sfv-file: '{}'".format(os.path.basename(outFile)))
 
 	for f in os.listdir(inDir):
 		try:
