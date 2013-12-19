@@ -99,49 +99,57 @@ class CheckFile(threading.Thread):
 def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 
 	for f in os.listdir(inDir):
-		if verbose:
-			print("considering for rename: {}".format(f))
+		try:
+			fN = str(os.path.basename(f).encode("iso-8859-15", "ignore"))
 
-		# excluded?
-		if re.match(excludedRename, str(f)):
 			if verbose:
-				print("excluded!")
-			continue
+				print("considering for rename: {}".format(fN))
 
-		# included?
-		if not re.match(includedRename, str(f)):
+			# excluded?
+			if re.match(excludedRename, fN):
+				if verbose:
+					print("excluded!")
+				continue
+
+			# included?
+			if not re.match(includedRename, fN):
+				if verbose:
+					print("not included!")
+				continue
+
+			# recursive?
+			if os.path.isdir(os.path.join(inDir, f)) and recursive:
+				ren(os.path.join(inDir, f), verbose, recursive, toLowercase, toUppercase)
+
+			# do renaming
+			result = str(f)
+			result = result.translate(replaceChar)
+			result = re.sub(r"\s+", "_", result)
+			result = re.sub(r"_+", "_", result)
+			result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9\)]+$", "", result)
+
+			if toLowercase:
+				result = result.lower()
+				pass
+
+			if toUppercase:
+				result = result.upper()
+				pass
+
+			if str(f) == str(result):
+				if verbose:
+					print("nothing to rename...")
+				continue
+
 			if verbose:
-				print("not included!")
-			continue
+				print("renaming in {}: '{}' to '{}'...".format(inDir, str(f), result))
 
-		# recursive?
-		if os.path.isdir(os.path.join(inDir, f)) and recursive:
-			ren(os.path.join(inDir, f), verbose, recursive, toLowercase, toUppercase)
+			os.rename(os.path.join(inDir, f), os.path.join(inDir, result))
 
-		# do renaming
-		result = str(f)
-		result = result.translate(replaceChar)
-		result = re.sub(r"\s+", "_", result)
-		result = re.sub(r"_+", "_", result)
-		result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9\)]+$", "", result)
-
-		if toLowercase:
-			result = result.lower()
-			pass
-
-		if toUppercase:
-			result = result.upper()
-			pass
-
-		if str(f) == str(result):
-			if verbose:
-				print("nothing to rename...")
-			continue
-
-		if verbose:
-			print("renaming in {}: '{}' to '{}'...".format(inDir, f, result))
-
-		os.rename(os.path.join(inDir, f), os.path.join(inDir, result))
+		except UnicodeEncodeError as uee:
+			# just in case...
+			print("encode error, skipping. ({})".format(uee))
+			raise		
 
 ######## ########################
 ##
@@ -154,36 +162,37 @@ def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 		os.remove(os.path.join(inDir, outFile))
 
 	if verbose:
-		print("generating checksums in sfv-file: '{}'".format(outFile))
+		print("generating checksums in sfv-file: \'{}\'".format(outFile))
 
 	for f in os.listdir(inDir):
+		fN = os.path.basename(f)
 
 		if verbose:
-			print("considering checksum for: '{}'".format(f))
+			print("considering checksum for: \'{}\'".format(f))
 
 		# excluded?
-		if re.match(excludedChecksum, str(f)):
+		if re.match(excludedChecksum, f):
 			if verbose:
 				print("excluded!")
 			continue
 
 		# included?
-		if not re.match(includedChecksum, str(f)):
+		if not re.match(includedChecksum, f):
 			if verbose:
 				print("not included!")
 			continue
 			
 		# recursive?
-		if os.path.isdir(os.path.join(inDir, f)) and recursive:
+		if os.path.isdir(os.path.join(inDir, fN)) and recursive:
 			if verbose:
 				print("is folder!")
-			sfvFile = os.path.join(inDir, f, "{}.sfv".format(str(f).lower()))
-			checksum(os.path.join(inDir, f), sfvFile, verbose, recursive, overwrite, poolSema)
+			sfvFile = os.path.join(inDir, fN, "{}.sfv".format(fN.lower()))
+			checksum(os.path.join(inDir, fN), sfvFile, verbose, recursive, overwrite, poolSema)
 			continue
 	
 		try:
 			poolSema.acquire()
-			CheckFile(os.path.join(inDir, f), os.path.join(inDir, outFile), poolSema, verbose).start()
+			CheckFile(os.path.join(inDir, fN), outFile, poolSema, verbose).start()
 			pass
 		except Exception as e:
 			raise
@@ -291,5 +300,5 @@ def main(argv=None):
 ##	
 ##### #####################
 if __name__ == "__main__":
-    # ./scene_renamer.py -r -v -i /var/downloads/site/GAMES-PC/The.Sims.3.Seasons-RELOADED/
+    # ./rename_and_checksum.py -r -v -i /var/downloads/site/GAMES-PC/The.Sims.3.Seasons-RELOADED/
     sys.exit(main())
