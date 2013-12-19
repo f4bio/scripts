@@ -106,19 +106,17 @@ def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 
 	for f in os.listdir(inDir):
 		try:
-			fN = str(os.path.basename(f).encode("iso-8859-15", "ignore"))
-
 			if verbose:
-				print("considering for rename: {}".format(fN))
+				print("considering for rename: {}".format(os.path.basename(f)))
 
 			# excluded?
-			if re.match(excludedRename, fN):
+			if re.match(excludedRename, os.path.basename(f)):
 				if verbose:
 					print("excluded!")
 				continue
 
 			# included?
-			if not re.match(includedRename, fN):
+			if not re.match(includedRename, os.path.basename(f)):
 				if verbose:
 					print("not included!")
 				continue
@@ -148,7 +146,7 @@ def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 				continue
 
 			if verbose:
-				print("renaming in {}: '{}' to '{}'...".format(inDir, str(f), result))
+				print("renaming in {}: '{}' to '{}'...".format(inDir, os.path.basename(f), result))
 
 			os.rename(os.path.join(inDir, f), os.path.join(inDir, result))
 			renameSuccess.append(result)
@@ -166,44 +164,41 @@ def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 ##### #####################
 def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 
-	
-	if os.path.isfile(os.path.join(inDir, outFile)) and overwrite:
-		os.remove(os.path.join(inDir, outFile))
+	if os.path.isfile(os.path.join(inDir, outFile.decode("utf-8"))) and overwrite:
+		os.remove(os.path.join(inDir, outFile.decode("utf-8")))
 
 	if verbose:
-		print("generating checksums in sfv-file: '{}'".format(outFile))
+		print("generating checksums in sfv-file: '{}'".format(outFile.decode("utf-8")))
 
 	for f in os.listdir(inDir):
 		try:
-			fN = os.path.basename(f)
-
 			if verbose:
-				print("considering checksum for: '{}'".format(f))
+				print("considering checksum for: '{}'".format(os.path.basename(f)))
 
 			# excluded?
-			if re.match(excludedChecksum, f):
+			if re.match(excludedChecksum, os.path.basename(f)):
 				if verbose:
 					print("excluded!")
 				continue
 
 			# included?
-			if not re.match(includedChecksum, f):
+			if not re.match(includedChecksum, os.path.basename(f)):
 				if verbose:
 					print("not included!")
 				continue
 				
 			# recursive?
-			if os.path.isdir(os.path.join(inDir, fN)) and recursive:
+			if os.path.isdir(os.path.join(inDir, f)) and recursive:
 				if verbose:
 					print("is folder!")
-				sfvFile = os.path.join(inDir, fN, "{}.sfv".format(fN.lower()))
-				checksum(os.path.join(inDir, fN), sfvFile, verbose, recursive, overwrite, poolSema)
+				sfvFile = os.path.join(inDir, f, "{}.sfv".format(f.lower()))
+				checksum(os.path.join(inDir, f), sfvFile, verbose, recursive, overwrite, poolSema)
 				continue
 
 			try:
 				poolSema.acquire()
-				CheckFile(os.path.join(inDir, fN), outFile, poolSema, verbose).start()
-				checksumSuccess.append(fN)
+				CheckFile(os.path.join(inDir, f), outFile, poolSema, verbose).start()
+				checksumSuccess.append(f)
 				pass
 			except Exception as e:
 				raise
