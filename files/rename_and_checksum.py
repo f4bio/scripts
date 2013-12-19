@@ -16,6 +16,7 @@ import getopt
 import re
 import zlib
 import re
+import threading
 
 replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue', 
 				ord('á'): 'a',  ord('é'): 'e',  ord('ú'): 'u',
@@ -25,7 +26,7 @@ replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue',
 				ord('À'): 'A',  ord('É'): 'E',  ord('Ú'): 'U',
 				ord('À'): 'A',  ord('È'): 'E',  ord('Ù'): 'U',
 
-				ord('['): "(",  ord(']'): ")",
+				ord('['): "(",  ord(']'): ")",	ord(','): "_",
 				ord('ß'): "ss", ord(' '): "_",
 				ord('&'): "and", ord('!'): "",
 				ord('#'): "",  ord('*'): "", ord('\''): "", ord('\"'): ""}
@@ -33,7 +34,7 @@ replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue',
 includedRename = "."
 includedChecksum = "."
 
-excludedRename = "^\."
+excludedRename = "^\.|^\[.*\]$|^\(.*\)$"
 excludedChecksum = "[C|c]overs?|[P|p]roof|Sample|^\.|.*\.nfo$|.*\.jpg$|.*\.txt$|.*\.sfv$"
 
 ######## ########################
@@ -42,16 +43,60 @@ excludedChecksum = "[C|c]overs?|[P|p]roof|Sample|^\.|.*\.nfo$|.*\.jpg$|.*\.txt$|
 ##	
 ##### #####################
 def usage():
-	print("scene_renamer.py [-v] [-r] [--no-sfv] [--no-rename] [-o output] -i /input/directory/")
+	# userIn = None
+	# userOut = None
+	# verbose = False
+	# doSfv = True
+	# toUppercase = False
+	# toLowercase = False
+	# doOverwrite = True
+	# doRename = True
+	# recursive = False
+	# threadCount = 1
+	print("scene_renamer.py [-v] [-r] [-l] [-u] [-w] [-s] [-n] [-t #] [-o <output>] -i </input/directory/>")
+	print("-h, --help")
+	print("-v, --verbose (default: false)")
+	print("-r, --recursive (default: false)")
+	print("-l, --to-lowercase\t\trename files to lowercase (default: false)")
+	print("-u, --to-uppercase\t\trename files to uppercase (default: false)")
+	print("-w, --no-overwrite\t\t\tdon't overwrite existing .sfv files (default: false)")
+	print("-s, --no-sfv\t\t\tdon't generate .sfv files (rename only) (default: false)")
+	print("-n, --no-rename\t\t\tdon't rename files (sfv only) (default: false)")
+	print("-t, --thread-count\t\t\tnumber # of threads, careful! (default: 1)")
+	print("-o, --output\t\t\tspecify output .sfv filename (default: <input>.sfv)")
+	print("-i, --input\t\t\tABSOLUTE path to directory to work in (MANDATORY!)")
+
+class CheckFile(threading.Thread):
+	def __init__(self, inFile, outFile, poolSema, verbose):
+		threading.Thread.__init__(self)
+		self.inFile = inFile
+		self.outFile = outFile
+		self.verbose = verbose
+		self.poolSema = poolSema
+
+	def run(self):
+		prev = 0
+		for line in open(self.inFile, "rb"):
+			prev = zlib.crc32(line, prev)
+
+		crc32 = str("{0:08x}").format((prev & 0xFFFFFFFF))
+
+		if self.verbose:
+			print("done: {}...".format(crc32))
+
+		with open(self.outFile, "a") as out:
+			out.write("{} {}\n".format(str(os.path.basename(self.inFile)), crc32))
+
+		self.poolSema.release()
 
 ######## ########################
 ##
 ##	rename
 ##
-##	TODO: rename "inDir" itelf 
+##	TODO: rename "inDir" itself 
 ##	
 ##### #####################
-def ren(inDir, verbose, recursive):	
+def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 
 	for f in os.listdir(inDir):
 		if verbose:
@@ -71,7 +116,7 @@ def ren(inDir, verbose, recursive):
 
 		# recursive?
 		if os.path.isdir(os.path.join(inDir, f)) and recursive:
-			ren(os.path.join(inDir, f), verbose, recursive)
+			ren(os.path.join(inDir, f), verbose, recursive, toLowercase, toUppercase)
 
 		# do renaming
 		result = str(f)
@@ -79,6 +124,14 @@ def ren(inDir, verbose, recursive):
 		result = re.sub(r"\s+", "_", result)
 		result = re.sub(r"_+", "_", result)
 		result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9\)]+$", "", result)
+
+		if toLowercase:
+			result = result.lower()
+			pass
+
+		if toUppercase:
+			result = result.upper()
+			pass
 
 		if str(f) == str(result):
 			if verbose:
@@ -95,9 +148,9 @@ def ren(inDir, verbose, recursive):
 ##	checksum
 ##	
 ##### #####################
-def checksum(inDir, outFile, verbose, recursive):
+def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 
-	if os.path.isfile(os.path.join(inDir, outFile)):
+	if os.path.isfile(os.path.join(inDir, outFile)) and overwrite:
 		os.remove(os.path.join(inDir, outFile))
 
 	if verbose:
@@ -106,7 +159,7 @@ def checksum(inDir, outFile, verbose, recursive):
 	for f in os.listdir(inDir):
 
 		if verbose:
-			print("considering for checksum: '{}'".format(f))
+			print("considering checksum for: '{}'".format(f))
 
 		# excluded?
 		if re.match(excludedChecksum, str(f)):
@@ -119,26 +172,24 @@ def checksum(inDir, outFile, verbose, recursive):
 			if verbose:
 				print("not included!")
 			continue
-
+			
 		# recursive?
 		if os.path.isdir(os.path.join(inDir, f)) and recursive:
 			if verbose:
 				print("is folder!")
-			sfvFile = os.path.join(inDir, f, "{}.sfv".format(f))
-			checksum(os.path.join(inDir, f), sfvFile, verbose, recursive)
+			sfvFile = os.path.join(inDir, f, "{}.sfv".format(str(f).lower()))
+			checksum(os.path.join(inDir, f), sfvFile, verbose, recursive, overwrite, poolSema)
 			continue
-
-		prev = 0
-		for line in open(os.path.join(inDir, f), "rb"):
-			prev = zlib.crc32(line, prev)
-
-		crc32 = str("{0:08x}").format((prev & 0xFFFFFFFF))
-
-		if verbose:
-			print("done: {}...".format(crc32))
-
-		with open(os.path.join(inDir, outFile), "a") as out:
-			out.write("{} {}\n".format(str(f), crc32))
+	
+		try:
+			poolSema.acquire()
+			CheckFile(os.path.join(inDir, f), os.path.join(inDir, outFile), poolSema, verbose).start()
+			pass
+		except Exception as e:
+			raise
+			usage()
+			sys.exit(2)
+		
 
 ######## ########################
 ##
@@ -147,8 +198,8 @@ def checksum(inDir, outFile, verbose, recursive):
 ##### #####################
 def main(argv=None):
 	try:
-		opts, args = getopt.getopt(sys.argv[1:], "hrvo:i:sn", 
-			["help", "recursive", "verbose", "output", "input", "no-sfv", "no-rename"])
+		opts, args = getopt.getopt(sys.argv[1:], "hrvo:i:swnlut:", 
+			["help", "recursive", "verbose", "output", "input", "no-sfv", "no-overwrite", "no-rename", "to-lowercase", "to-uppercase", "thread-count"])
 
 	except getopt.GetoptError as err:
 		# print help information and exit:
@@ -160,8 +211,12 @@ def main(argv=None):
 	userOut = None
 	verbose = False
 	doSfv = True
+	toUppercase = False
+	toLowercase = False
+	doOverwrite = True
 	doRename = True
 	recursive = False
+	threadCount = 1
 
 	for o, a in opts:
 		if o in ("-v", "--verbose"):
@@ -185,24 +240,37 @@ def main(argv=None):
 
 		elif o in ("-r", "--recursive"):
 			recursive = True
+
+		elif o in ("-l", "--to-lowercase"):
+			toLowercase = True
+
+		elif o in ("-u", "--to-uppercase"):
+			toUppercase = True
+
+		elif o in ("-w", "--no-overwrite"):
+			doOverwrite = False
+
+		elif o in ("-t", "--thread-count"):
+			threadCount = int(a)
+
 		else:
 			assert False, "unhandled option"
 
 	if verbose:
-		print("input: {} output: {} verbose: {} sfv: {} rename: {} recursive: {}"
-			.format(userIn, userOut, verbose, doSfv, doRename, recursive))
+		print("input: {} / output: {} / verbose: {} / sfv: {} / rename: {} / recursive: {} / threads: {} / overwrite: {}"
+			.format(userIn, userOut, verbose, doSfv, doRename, recursive, threadCount, doOverwrite))
 
-	## input is always needed
+	## input (-i/--input) is always needed
 	if not userIn or not os.path.isdir(userIn):
 		if verbose:
-			print("no input-dir specified, check --help")
+			print("no input-directory specified, check --help")
 		sys.exit()
 
 	######
 	## rename
 	####
 	if doRename:
-		ren(userIn, verbose, recursive)
+		ren(userIn, verbose, recursive, toLowercase, toUppercase)
 
 	######
 	## sfv
@@ -214,7 +282,8 @@ def main(argv=None):
 			outFile = str(userOut)
 
 		outFile = outFile.lower()
-		checksum(userIn, outFile, verbose, recursive)
+		poolSema = threading.BoundedSemaphore(value=threadCount)
+		checksum(userIn, outFile, verbose, recursive, doOverwrite, poolSema)
 
 ######## ########################
 ##

@@ -73,6 +73,16 @@ proguard_logs/
 
 ###### ################
 ##
+##	gradle
+##
+### ##########
+.gradle
+/local.properties
+/.idea/workspace.xml
+.DS_Store
+
+###### ################
+##
 ##	python
 ##	thx: http://goo.gl/WR3a3F
 ##

@@ -1,3 +1,0 @@
-warez
-=====
-* scene_renamer
