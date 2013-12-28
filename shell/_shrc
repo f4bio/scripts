@@ -1,2 +1,9 @@
+### ###############
+## 
+## put in rc of your shell
+## e.g. ~/.zshrc or ~/.bashrc 
+##
+### #######
+
 [[ -f ~/.sh.d/alias ]] && . ~/.sh.d/alias
 [[ -f ~/.sh.d/export ]] && . ~/.sh.d/export

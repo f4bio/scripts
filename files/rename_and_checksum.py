@@ -168,21 +168,21 @@ def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 		os.remove(os.path.join(inDir, outFile))
 
 	if verbose:
-		print("generating checksums in sfv-file: '{}'".format(os.path.basename(outFile)))
+		print("generating checksums in sfv-file: '{}'".format(outFile))
 
 	for f in os.listdir(inDir):
 		try:
 			if verbose:
-				print("considering checksum for: '{}'".format(os.path.basename(f)))
+				print("considering checksum for: '{}'".format(f))
 
 			# excluded?
-			if re.match(excludedChecksum, os.path.basename(f)):
+			if re.match(excludedChecksum, f):
 				if verbose:
 					print("excluded!")
 				continue
 
 			# included?
-			if not re.match(includedChecksum, os.path.basename(f)):
+			if not re.match(includedChecksum, f):
 				if verbose:
 					print("not included!")
 				continue
@@ -194,10 +194,9 @@ def checksum(inDir, outFile, verbose, recursive, overwrite, poolSema):
 				sfvFile = os.path.join(inDir, f, "{}.sfv".format(f.lower()))
 				checksum(os.path.join(inDir, f), sfvFile, verbose, recursive, overwrite, poolSema)
 				continue
-
 			try:
 				poolSema.acquire()
-				CheckFile(os.path.join(inDir, f), outFile, poolSema, verbose).start()
+				CheckFile(os.path.join(inDir, f), os.path.join(inDir, outFile), poolSema, verbose).start()
 				checksumSuccess.append(f)
 				pass
 			except Exception as e:

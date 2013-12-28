@@ -1,2 +1,6 @@
 alias psa="ps aux | grep"
+alias sser="sudo service"
+alias sn="sudo netstat -tulpen"
+alias newrnd="export NEWRND=$(pwgen)"
+
 alias git-save="git add -A && git commit --message \"default autosave\" && git push"
