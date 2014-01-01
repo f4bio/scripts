@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=SFT Encrypter (Wine)
+Exec=wine /home/ft/.wine/drive_c/Program\ Files\ \(x86\)/sft-encrypter_2009_beta2/encrypter.exe
+MimeType=application/x-ms-dos-executable;application/x-msi;application/x-ms-shortcut;
+Icon=/home/ft/.wine/drive_c/Program\ Files\ \(x86\)/sft-encrypter_2009_beta2/icon.png
+NoDisplay=false
+StartupNotify=true
+Name[en_US]=SFTEncrypter

@@ -81,6 +81,10 @@ class CheckFile(threading.Thread):
 		self.poolSema = poolSema
 
 	def run(self):
+		if not os.path.isfile(self.inFile):
+			self.poolSema.release()
+			return
+
 		prev = 0
 		for line in open(self.inFile, "rb"):
 			prev = zlib.crc32(line, prev)
@@ -328,5 +332,5 @@ def main(argv=None):
 ##	
 ##### #####################
 if __name__ == "__main__":
-    # ./rename_and_checksum.py -r -v -i /var/downloads/site/GAMES-PC/The.Sims.3.Seasons-RELOADED/
-    sys.exit(main())
+	# ./rename_and_checksum.py -r -v -i /var/downloads/site/GAMES-PC/The.Sims.3.Seasons-RELOADED/
+	sys.exit(main())

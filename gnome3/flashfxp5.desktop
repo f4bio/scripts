@@ -1,0 +1,9 @@
+[Desktop Entry]
+Type=Application
+Name=FlashFXP 5 (Wine)
+Exec=wine /home/ft/.wine/drive_c/Program\ Files\ \(x86\)/FlashFXP\ 5/FlashFXP.exe
+MimeType=application/x-ms-dos-executable;application/x-msi;application/x-ms-shortcut;
+Icon=/home/ft/.local/share/icons/hicolor/256x256/apps/1C0A_flashfxp.0.png
+NoDisplay=false
+StartupNotify=true
+Name[en_US]=FlashFXP5
