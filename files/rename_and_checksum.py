@@ -65,10 +65,10 @@ def usage():
 	print("-r, --recursive (default: false)")
 	print("-l, --to-lowercase\t\trename files to lowercase (default: false)")
 	print("-u, --to-uppercase\t\trename files to uppercase (default: false)")
-	print("-w, --no-overwrite\t\t\tdon't overwrite existing .sfv files (default: false)")
+	print("-w, --no-overwrite\t\tdon't overwrite existing .sfv files (default: false)")
 	print("-s, --no-sfv\t\t\tdon't generate .sfv files (rename only) (default: false)")
 	print("-n, --no-rename\t\t\tdon't rename files (sfv only) (default: false)")
-	print("-t, --thread-count\t\t\tnumber # of threads, careful! (default: 1)")
+	print("-t, --thread-count\t\tnumber # of threads, careful! (default: 1)")
 	print("-o, --output\t\t\tspecify output .sfv filename (default: <input>.sfv)")
 	print("-i, --input\t\t\tABSOLUTE path to directory to work in (MANDATORY!)")
 
@@ -286,8 +286,7 @@ def main(argv=None):
 
 	## input (-i/--input) is always needed
 	if not userIn or not os.path.isdir(userIn):
-		if verbose:
-			print("no input-directory specified, check --help")
+		print("no input-directory specified, check --help")
 		sys.exit()
 
 	######
