@@ -31,7 +31,7 @@ fi
 ##	
 ##### #####################
 # css
-cp $TMP_DIR/mediaelement/build/mediaelementplayer.css $OC_DIR/apps/files_videoviewer/css
+#cp $TMP_DIR/mediaelement/build/mediaelementplayer.css $OC_DIR/apps/files_videoviewer/css
 # images / svgs
 cp $TMP_DIR/mediaelement/build/background.png $OC_DIR/apps/files_videoviewer/img/skin
 cp $TMP_DIR/mediaelement/build/bigplay.png $OC_DIR/apps/files_videoviewer/img/skin

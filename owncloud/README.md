@@ -1,4 +1,4 @@
 video-updater.sh
 ================
-* updates files_videoviewer
+* updates Video Viewer (files_videoviewer)
 * probably run as root
