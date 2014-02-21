@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Africa",
+        "subdomain": "africa"
+    },
+    {
+        "name": "Asia",
+        "subdomain": "asia"
+    },
+    {
+        "name": "Europe",
+        "subdomain": "europe"
+    },
+    {
+        "name": "North America",
+        "subdomain": "north-america"
+    },
+    {
+        "name": "Oceania",
+        "subdomain": "oceania"
+    },
+    {
+        "name": "South America",
+        "subdomain": "south-america"
+    }
+]

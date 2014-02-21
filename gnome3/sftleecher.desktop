@@ -1,9 +1,0 @@
-[Desktop Entry]
-Type=Application
-Name=SFT Leecher (Wine)
-Exec=wine /home/ft/.wine/drive_c/Program\ Files\ \(x86\)/sft-loader_2010_alpha/leecher.exe
-MimeType=application/x-ms-dos-executable;application/x-msi;application/x-ms-shortcut;
-Icon=/home/ft/.wine/drive_c/Program\ Files\ \(x86\)/sft-loader_2010_alpha/icon.png
-NoDisplay=false
-StartupNotify=true
-Name[en_US]=SFTLeecher

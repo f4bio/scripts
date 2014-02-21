@@ -1,0 +1,322 @@
+[
+    {
+        "name": "Angola",
+        "subdomain": ""
+    },
+    {
+        "name": "Argentina",
+        "subdomain": "ar"
+    },
+    {
+        "name": "Argentina",
+        "subdomain": ""
+    },
+    {
+        "name": "Australia",
+        "subdomain": ""
+    },
+    {
+        "name": "Austria",
+        "subdomain": "au"
+    },
+    {
+        "name": "Bahamas",
+        "subdomain": ""
+    },
+    {
+        "name": "Bangladesh",
+        "subdomain": ""
+    },
+    {
+        "name": "Belarus",
+        "subdomain": ""
+    },
+    {
+        "name": "Belgium",
+        "subdomain": ""
+    },
+    {
+        "name": "Bosnia and Herzegovina",
+        "subdomain": ""
+    },
+    {
+        "name": "Brazil",
+        "subdomain": ""
+    },
+    {
+        "name": "Bulgaria",
+        "subdomain": ""
+    },
+    {
+        "name": "Cambodia",
+        "subdomain": ""
+    },
+    {
+        "name": "Canada",
+        "subdomain": "ca"
+    },
+    {
+        "name": "Chile",
+        "subdomain": ""
+    },
+    {
+        "name": "China",
+        "subdomain": "cn"
+    },
+    {
+        "name": "Costa Rica",
+        "subdomain": ""
+    },
+    {
+        "name": "Czech Republic",
+        "subdomain": "cz"
+    },
+    {
+        "name": "Denmark",
+        "subdomain": "dk"
+    },
+    {
+        "name": "El Salvador",
+        "subdomain": ""
+    },
+    {
+        "name": "Estonia",
+        "subdomain": ""
+    },
+    {
+        "name": "Finland",
+        "subdomain": ""
+    },
+    {
+        "name": "France",
+        "subdomain": "fr"
+    },
+    {
+        "name": "Germany",
+        "subdomain": "de"
+    },
+    {
+        "name": "Greece",
+        "subdomain": "gr"
+    },
+    {
+        "name": "Guatemala",
+        "subdomain": ""
+    },
+    {
+        "name": "Hong Kong",
+        "subdomain": "hk"
+    },
+    {
+        "name": "Hungary",
+        "subdomain": ""
+    },
+    {
+        "name": "India",
+        "subdomain": ""
+    },
+    {
+        "name": "Indonesia",
+        "subdomain": ""
+    },
+    {
+        "name": "Iran",
+        "subdomain": ""
+    },
+    {
+        "name": "Ireland",
+        "subdomain": ""
+    },
+    {
+        "name": "Israel",
+        "subdomain": ""
+    },
+    {
+        "name": "Italy",
+        "subdomain": "it"
+    },
+    {
+        "name": "Japan",
+        "subdomain": "jp"
+    },
+    {
+        "name": "Korea",
+        "subdomain": "kr"
+    },
+    {
+        "name": "Kyrgyzstan",
+        "subdomain": ""
+    },
+    {
+        "name": "Latvia",
+        "subdomain": ""
+    },
+    {
+        "name": "Lithuania",
+        "subdomain": ""
+    },
+    {
+        "name": "Luxembourg",
+        "subdomain": "lu"
+    },
+    {
+        "name": "Macedonia",
+        "subdomain": ""
+    },
+    {
+        "name": "Madagascar",
+        "subdomain": ""
+    },
+    {
+        "name": "Malaysia",
+        "subdomain": ""
+    },
+    {
+        "name": "Mexico",
+        "subdomain": ""
+    },
+    {
+        "name": "Moldova",
+        "subdomain": ""
+    },
+    {
+        "name": "Netherlands",
+        "subdomain": ""
+    },
+    {
+        "name": "New Caledonia",
+        "subdomain": ""
+    },
+    {
+        "name": "New Zealand",
+        "subdomain": ""
+    },
+    {
+        "name": "Norway",
+        "subdomain": "no"
+    },
+    {
+        "name": "Oman",
+        "subdomain": ""
+    },
+    {
+        "name": "Pakistan",
+        "subdomain": ""
+    },
+    {
+        "name": "Panama",
+        "subdomain": ""
+    },
+    {
+        "name": "Philippines",
+        "subdomain": ""
+    },
+    {
+        "name": "Poland",
+        "subdomain": "pl"
+    },
+    {
+        "name": "Portugal",
+        "subdomain": ""
+    },
+    {
+        "name": "Qatar",
+        "subdomain": ""
+    },
+    {
+        "name": "Republic of Serbia",
+        "subdomain": ""
+    },
+    {
+        "name": "Romania",
+        "subdomain": ""
+    },
+    {
+        "name": "Russian Federation",
+        "subdomain": ""
+    },
+    {
+        "name": "Saudi Arabia",
+        "subdomain": ""
+    },
+    {
+        "name": "Singapore",
+        "subdomain": ""
+    },
+    {
+        "name": "Slovakia",
+        "subdomain": ""
+    },
+    {
+        "name": "Slovenia",
+        "subdomain": ""
+    },
+    {
+        "name": "South Africa",
+        "subdomain": ""
+    },
+    {
+        "name": "Spain",
+        "subdomain": "es"
+    },
+    {
+        "name": "Srilanka",
+        "subdomain": ""
+    },
+    {
+        "name": "Sweden",
+        "subdomain": "se"
+    },
+    {
+        "name": "Switzerland",
+        "subdomain": "ch"
+    },
+    {
+        "name": "Taiwan",
+        "subdomain": "tw"
+    },
+    {
+        "name": "Tanzania",
+        "subdomain": ""
+    },
+    {
+        "name": "Thailand",
+        "subdomain": ""
+    },
+    {
+        "name": "Turkey",
+        "subdomain": ""
+    },
+    {
+        "name": "Ukraine",
+        "subdomain": ""
+    },
+    {
+        "name": "United Arab Emirates",
+        "subdomain": ""
+    },
+    {
+        "name": "United Kingdom",
+        "subdomain": "uk"
+    },
+    {
+        "name": "United States",
+        "subdomain": "us"
+    },
+    {
+        "name": "Uzbekistan",
+        "subdomain": ""
+    },
+    {
+        "name": "Venezuela",
+        "subdomain": ""
+    },
+    {
+        "name": "Vietnam",
+        "subdomain": ""
+    },
+    {
+        "name": "Yugoslavia",
+        "subdomain": ""
+    }
+]
