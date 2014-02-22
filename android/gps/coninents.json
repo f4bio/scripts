@@ -1,26 +1,26 @@
 [
     {
         "name": "Africa",
-        "subdomain": "africa"
+        "ntp_server": "africa.pool.ntp.org"
     },
     {
         "name": "Asia",
-        "subdomain": "asia"
+        "ntp_server": "asia.pool.ntp.org"
     },
     {
         "name": "Europe",
-        "subdomain": "europe"
+        "ntp_server": "europe.pool.ntp.org"
     },
     {
         "name": "North America",
-        "subdomain": "north-america"
+        "ntp_server": "north-america.pool.ntp.org"
     },
     {
         "name": "Oceania",
-        "subdomain": "oceania"
+        "ntp_server": "oceania.pool.ntp.org"
     },
     {
         "name": "South America",
-        "subdomain": "south-america"
+        "ntp_server": "south-america.pool.ntp.org"
     }
 ]
