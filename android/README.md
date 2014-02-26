@@ -7,3 +7,4 @@ android
 * scripts:
 	* multi res drawables
 	* playstore on avd
+	* root on avd
