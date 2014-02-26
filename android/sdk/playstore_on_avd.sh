@@ -8,7 +8,7 @@
 #### ##########
 
 avd=$1
-basedir="$( cd $(dirname $0) && pwd )"
+basedir="$(dirname $(dirname $(realpath $0)))"
 
 if [ -z $avd ]; then
 	echo "no avd-name passed. usage: $(basename $0) AVD_NAME"

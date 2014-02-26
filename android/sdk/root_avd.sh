@@ -6,7 +6,7 @@
 ##
 #### ##########
 
-basedir="$( cd $(dirname $0) && pwd )"
+basedir="$(dirname $(dirname $(realpath $0)))"
 
 if [ -z $basedir ]; then
 	echo "error accessing apks in $basedir/apk"
