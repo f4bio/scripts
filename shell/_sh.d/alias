@@ -1,5 +1,6 @@
 alias psa="ps aux | grep"
 alias sser="sudo service"
 alias sn="sudo netstat -tulpen"
-
 alias git-save="git add -A && git commit --message \"default autosave\" && git push"
+alias ll="ls -lh"
+alias l="ls -lah"
