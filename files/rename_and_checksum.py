@@ -26,7 +26,7 @@ replaceChar = {	ord('ä'): 'ae', ord('ö'): 'oe', ord('ü'): 'ue',
 				ord('À'): 'A',  ord('É'): 'E',  ord('Ú'): 'U',
 				ord('À'): 'A',  ord('È'): 'E',  ord('Ù'): 'U',
 
-				ord('['): "(",  ord(']'): ")",	ord(','): "_",
+				ord('['): "(",  ord(']'): ')',	ord(','): "_",
 				ord('ß'): "ss", ord(' '): "_",
 				ord('&'): "and", ord('!'): "",
 				ord('#'): "",  ord('*'): "", ord('\''): "", ord('\"'): ""}
@@ -134,7 +134,7 @@ def ren(inDir, verbose, recursive, toLowercase, toUppercase):
 			result = result.translate(replaceChar)
 			result = re.sub(r"\s+", "_", result)
 			result = re.sub(r"_+", "_", result)
-			result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9\)]+$", "", result)
+			result = re.sub(r"^[^a-zA-Z0-9]+|[^a-zA-Z0-9\(\)]+$", "", result)
 
 			if toLowercase:
 				result = result.lower()
