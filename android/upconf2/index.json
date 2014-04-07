@@ -1,10 +1,14 @@
 {
+
+	// action 0: append
+	// action 1: replace
+
 	"configurations": [
 		{
 			"id" : "moaab_adblock",
 			"title": "Adblock (MoaAB)",
 			"version": 1.0,
-			"timestamp": 1396874940,
+			"timestamp": 1396887682560,
 			"author": "Ff Tt",
 			"description": "block ads with \"Mother of all AdBlock\"-list (~11mb)",
 			"action": 0,
@@ -15,7 +19,7 @@
 			"id" : "basic_adblock",
 			"title": "Adblock (basic)",
 			"version": 1.0,
-			"timestamp": 1396874940,
+			"timestamp": 1396887682560,
 			"author": "Ff Tt",
 			"description": "block ads with basic-list (~1mb)",
 			"action": 0,
@@ -26,7 +30,7 @@
 			"id" : "hosts_stock",
 			"title": "Revert hosts",
 			"version": 1.0,
-			"timestamp": 1396874940,
+			"timestamp": 1396887682560,
 			"author": "Ff Tt",
 			"description": "revert to stock hosts file (e.g.: to undo adblock)",
 			"action": 1,
@@ -37,7 +41,7 @@
 			"id" : "gps_de",
 			"title": "GPS Fix (for DE)",
 			"version": 1.0,
-			"timestamp": 1396874940,
+			"timestamp": 1396887682560,
 			"author": "Ff Tt",
 			"description": "fix gps for germany",
 			"action": 1,
@@ -48,16 +52,12 @@
 			"id" : "gps_stock",
 			"title": "Stock GPS",
 			"version": 1.0,
-			"timestamp": 1396874940,
+			"timestamp": 1396887682560,
 			"author": "Ff Tt",
 			"description": "undo GPS fix",
 			"action": 1,
 			"source": "http://tinyurl.com/upconf2-gps-stock",
 			"target": "file:///system/etc/gps.conf"
 		}
-	],
-	"actions": [
-		{ "append": 0 },
-		{ "replace": 1 }
 	]
 }
