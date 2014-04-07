@@ -43,7 +43,7 @@
 			"operation": 1,
 			"source": "https://raw.githubusercontent.com/ft2011/scripts/master/android/gps/gps.conf_de",
 			"target": "file:///system/etc/gps.conf"
-		}
+		},
 		{
 			"id" : "gps_stock",
 			"title": "Stock GPS",
