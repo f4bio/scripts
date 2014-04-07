@@ -1,0 +1,13 @@
+{
+	"ids": [ "moaab", "gps_de" ],
+
+	"moaab": {
+		"title": "Adblock MoaAB",
+		"url": "https://raw.githubusercontent.com/ft2011/scripts/master/android/upconf2/moaab.json"
+	},
+	"gps_de": {
+		"title": "GPS (DE)",
+		"url": "https://raw.githubusercontent.com/ft2011/scripts/master/android/gps/gps.conf_de"
+	},
+
+}
