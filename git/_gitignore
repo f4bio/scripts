@@ -22,13 +22,6 @@
 
 ###### ################
 ##
-##	gradle
-##
-#### ##########
-/build
-
-###### ################
-##
 ##	other
 ##
 #### ##########
@@ -85,7 +78,9 @@ proguard_logs/
 ### ##########
 .gradle
 /local.properties
+/gradle.properties
 /.idea/workspace.xml
+/build
 .DS_Store
 
 ###### ################

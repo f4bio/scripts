@@ -1,0 +1,21 @@
+#### java
+##
+if [ -d /opt/java ]; then
+	export JAVA_HOME=/opt/java
+	export J2SDKDIR=/opt/java
+fi
+if [ -d $JAVA_HOME/jre ]; then
+	export J2REDIR=/opt/java/jre
+fi
+if [ -d $JAVA_HOME/bin ];then
+	export PATH=$PATH:$JAVA_HOME/bin
+fi
+if [ -d $JAVA_HOME/db/bin  ]; then
+	export PATH=$PATH:$JAVA_HOME/db/bin 
+fi
+if [ -d $JAVA_HOME/jre/bin  ];then
+	export PATH=$PATH:$JAVA_HOME/jre/bin
+fi
+if [ -d $JAVA_HOME/db ];then
+	export DERBY_HOME=$JAVA_HOME/db
+fi

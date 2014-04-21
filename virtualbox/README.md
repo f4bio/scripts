@@ -1,3 +1,0 @@
-virtualbox scripts
-==================
-* sRGB

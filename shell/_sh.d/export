@@ -1,37 +1,11 @@
 #### android
-##
-[[ -d /opt/android-sdk ]] && export ANDROID_HOME=/opt/android-sdk
-[[ -d $HOME/.android-sdk-linux ]] && export ANDROID_HOME=$HOME/.android-sdk-linux
-[[ -d $ANDROID_HOME/tools ]] && export PATH=$PATH:$ANDROID_HOME/tools
-[[ -d $ANDROID_HOME/platform-tools ]] && export PATH=$PATH:$ANDROID_HOME/platform-tools
+[[ -f $HOME/.sh.d/android ]] && . $HOME/.sh.d/android
 
-#### random
-##
-[[ -d /usr/lib/pkgconfig ]] && export PKG_CONFIG_PATH=/usr/lib/pkgconfig
-[[ -f $(which nano) ]] && export EDITOR=$(which nano)
-[[ -f $(which chromium) ]] && export BROWSER=$(which chromium)
-[[ -f $(which pwgen) ]] && export NEWRND=$(pwgen) 
+#### other
+[[ -f $HOME/.sh.d/other  ]] && . $HOME/.sh.d/other
 
-#### oracle/openjdk java7/8
-##
-[[ -d /usr/lib/jvm/java-7-openjdk-amd64 ]] && export JAVA_HOME=/usr/lib/jvm/java-7-openjdk-amd64
-[[ -d /opt/java ]] && export JAVA_HOME=/opt/java
-[[ -d /usr/lib/jvm/java-8-oracle ]] && export JAVA_HOME=/usr/lib/jvm/java-8-oracle
-[[ -d $JAVA_HOME/bin ]] && export PATH=$PATH:$JAVA_HOME/bin
-
-#### eggdrop
-##
-[[ -d $HOME/eggdrop/install/language ]] && export EGG_LANGDIR=$HOME/eggdrop/install/language
-[[ -d $HOME/eggdrop/install ]] && export PATH=$PATH:$HOME/eggdrop/install
-
-####  other path updates
-##
-[[ -d /usr/bin/core_perl ]] && export PATH=$PATH:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/core_perl
-[[ -d $PKG_CONFIG_PATH ]] && export PATH=$PATH:$PKG_CONFIG_PATH
-[[ -d $HOME/bin ]] && export PATH=$PATH:$HOME/bin
+#### java
+[[ -f $HOME/.sh.d/java  ]] && . $HOME/.sh.d/java
 
 #### locales
-##
-export LANG=en_US.UTF-8
-export LC_MESSAGES="C"
-export LC_ALL=en_US.UTF-8
+[[ -f $HOME/.sh.d/locales  ]] && . $HOME/.sh.d/locales

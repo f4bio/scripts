@@ -1,3 +1,0 @@
-linux
-=====
-* disable_umlaut

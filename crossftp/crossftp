@@ -1,0 +1,4 @@
+#!/bin/bash
+
+cd $HOME/.crossftp
+./run_client.sh

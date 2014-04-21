@@ -1,7 +1,15 @@
+#### functions
+##
+md5sum2file() {
+	md5sum $1 > $1.md5
+}
+
 alias psa="ps aux | grep"
 alias sser="sudo service"
 alias sn="sudo netstat -tulpen"
 alias git-save="git add -A && git commit --message \"default autosave\" && git push"
+alias git-fix-gitignore="git rm -r --cached . && git add . && git commit --message \"gitignore works now\" && git push"
 alias ll="ls -lh"
 alias l="ls -lah"
 alias pubip="wget -qO- http://ipecho.net/plain ; echo"
+alias md5file="md5sum2file"
