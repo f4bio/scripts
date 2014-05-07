@@ -12,10 +12,10 @@ if [ -d $HOME/.python3 ]; then
 	export PYTHON_ROOT=$HOME/.python3
 fi
 if [ -d /opt/python ]; then
-	export PYTHON_ROOT=$HOME/.python
+	export PYTHON_ROOT=/opt/python
 fi
 if [ -d /opt/python3 ]; then
-	export PYTHON_ROOT=$HOME/.python3
+	export PYTHON_ROOT=/opt/python3
 fi
 
 # path
