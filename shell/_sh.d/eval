@@ -1,0 +1,3 @@
+#### pyenv
+which pyenv
+[[ $? -eq 0 ]] && eval "$(pyenv init -)"

@@ -1,9 +1,10 @@
 ### ###############
 ## 
-## put in rc of your shell
+## put at the end of shells ".rc"
 ## e.g. ~/.zshrc or ~/.bashrc 
 ##
 ### #######
 
 [[ -f ~/.sh.d/alias ]] && . ~/.sh.d/alias
 [[ -f ~/.sh.d/export ]] && . ~/.sh.d/export
+[[ -f ~/.sh.d/eval ]] && . ~/.sh.d/eval
