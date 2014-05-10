@@ -1,0 +1,21 @@
+$HTTP["remoteip"] == "192.133.125.0/24" {
+	server.kbytes-per-second = 14
+}
+$HTTP["remoteip"] == "165.135.0.0/16" {
+	server.kbytes-per-second = 14
+}
+$HTTP["remoteip"] == "192.104.54.0/24" {
+	server.kbytes-per-second = 14
+}
+$HTTP["remoteip"] == "4.21.126.0/24" {
+	server.kbytes-per-second = 14
+}
+$HTTP["remoteip"] == "65.125.25.64/26" {
+	server.kbytes-per-second = 14
+}
+$HTTP["remoteip"] == "208.23.64.0/25" {
+	server.kbytes-per-second = 14
+}
+$HTTP["remoteip"] == "79.248.169.164" {
+	server.kbytes-per-second = 14
+}
