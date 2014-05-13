@@ -1,7 +1,7 @@
 #### functions
 ##
-md5sumfile() {
-	md5sum "$1" > "$1".md5sum
+md5file() {
+	md5sum "$1" > "$1".md5
 }
 
 alias psa="ps aux | grep"

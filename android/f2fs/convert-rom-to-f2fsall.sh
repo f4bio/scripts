@@ -1,7 +1,5 @@
 #!/bin/bash
 
-
-
 ext4=(
 	"format(\"ext4\", \"EMMC\", \"/dev/block/platform/msm_sdcc.1/by-name/system\", \"0\", \"/system\");"
 	"mount(\"ext4\", \"EMMC\", \"/dev/block/platform/msm_sdcc.1/by-name/system\", \"/system\");"
@@ -29,28 +27,28 @@ FILENAME="${FILENAME%.*}"
 BASEDIR="$(dirname $FILEIN)"
 FILESIGNED="$FILENAME-f2fsall-signed.$EXTENSION"
 
+echo "removing old files which may interfere..."
+[[ -f "$FILESIGNED" ]] && rm "$FILESIGNED"
+[[ -f "$FILESIGNED.md5" ]] && rm "$FILESIGNED.md5"
+
 echo "unzipping..."
-sh -c "$P7ZIP x -y -o$WORKINGDIR $FILEIN > /dev/null"
+sh -c "$P7ZIP x -y -o$WORKINGDIR $FILEIN META-INF/com/google/android/updater-script > /dev/null"
 
 echo "changing commands..."
-TMPFILE="$(mktemp)"
-cp "$WORKINGDIR/META-INF/com/google/android/updater-script" "$TMPFILE"
-sed -i -e "s#${ext4[0]}#${f2fs[0]}#" "$TMPFILE"
-sed -i -e "s#${ext4[1]}#${f2fs[1]}#" "$TMPFILE"
-cp "$TMPFILE" "$WORKINGDIR/META-INF/com/google/android/updater-script"
-rm "$TMPFILE"
+sed -i -e "s#${ext4[0]}#${f2fs[0]}#" "$WORKINGDIR/META-INF/com/google/android/updater-script"
+sed -i -e "s#${ext4[1]}#${f2fs[1]}#" "$WORKINGDIR/META-INF/com/google/android/updater-script"
 
-echo "zipping & signing..."
-TMPFILE="$(mktemp)"
-sh -c "$P7ZIP a -r $TMPFILE.zip $WORKINGDIR/* > /dev/null"
-sh -c "$SIGNAPK $TMPFILE.zip $BASEDIR/$FILESIGNED"
-rm "$TMPFILE.zip"
+echo "updating..."
+sh -c "cp $FILEIN $WORKINGDIR/$FILESIGNED"
+sh -c "$P7ZIP u -r -m0 $WORKINGDIR/$FILESIGNED $WORKINGDIR/META-INF > /dev/null"
+
+echo "signing..."
+sh -c "$SIGNAPK $WORKINGDIR/$FILESIGNED $BASEDIR/$FILESIGNED"
 
 echo "final touches..."
-sh -c "$MD5SUM $BASEDIR/$FILESIGNED > $BASEDIR/$FILESIGNED.md5sum"
+sh -c "$MD5SUM $BASEDIR/$FILESIGNED > $BASEDIR/$FILESIGNED.md5"
 
-echo "cleaning up..."
+echo "cleaning up the mess..."
 rm -rf "$WORKINGDIR"
-rm -rf "$TMPFILE"
 
-echo "files are in: $BASEDIR"
+echo "all done! your files are in: $BASEDIR"
